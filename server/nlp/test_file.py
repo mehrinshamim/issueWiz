@@ -141,9 +141,10 @@ class TestKeywordExtractionAndMatching(unittest.TestCase):
 
         if isinstance(match_result,str):
              match_result=json.loads(match_result)
+       
         # Assert that the match result is as expected (modify based on expected output)
         self.assertIsInstance(match_result, dict, "Expected match result to be a dictionary.")
         # Add more assertions based on expected behavior of keyword_matcher
-
+        print(match_result)
 if __name__ == '__main__':
     unittest.main()
