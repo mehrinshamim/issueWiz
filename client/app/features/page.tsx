@@ -40,7 +40,7 @@ const Features = () => {
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white">
-            Explore IssueWiz Features
+            EXPLORE ISSUEWIZ FEATURES
           </h1>
         </div>
 
@@ -53,7 +53,7 @@ const Features = () => {
     <div className="h-12 w-12 rounded-lg bg-cyan-500/20 flex items-center justify-center mb-4">
       <BookOpen className="text-cyan-400" size={24} />
     </div>
-    <CardTitle className="text-xl text-white/90">Issue-Specific Guidance and Documentation</CardTitle>
+    <CardTitle className="text-xl text-white/90">Issue-Specific Guidance</CardTitle>
     <CardDescription className="text-white/70">
       Get actionable insights and interactive documentation for any GitHub issue.
     </CardDescription>
@@ -79,7 +79,7 @@ const Features = () => {
 
 
          
-        {/* Feature Card 2 */}
+{/* Feature Card 2 */}
 <Card className="group bg-white/5 border-cyan-500/20 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105">
   <CardHeader>
     <div className="h-12 w-12 rounded-lg bg-cyan-500/20 flex items-center justify-center mb-4">
@@ -92,7 +92,7 @@ const Features = () => {
   </CardHeader>
   <CardContent className="text-white/60">
     Designed for beginners or contributors unsure where to start, input your GitHub username and preferred repository. 
-    The AI recommends issues based on your skills or provides similar ones to help you learn while contributing.
+    The AI recommends issues based on your skills .
   </CardContent>
   <CardFooter>
     <button
