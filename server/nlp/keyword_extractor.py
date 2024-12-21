@@ -1,6 +1,6 @@
-from models.spacy_ner import extract_keywords_with_spacy
-from models.keybert_model import extract_keywords_with_keybert
-from models.tfidf import extract_keywords_with_tfidf
+from nlp.models.spacy_ner import extract_keywords_with_spacy
+from nlp.models.keybert_model import extract_keywords_with_keybert
+from nlp.models.tfidf import extract_keywords_with_tfidf
 
 
 def keyword_extractor(text, top_n=20):

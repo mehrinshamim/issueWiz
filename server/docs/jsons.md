@@ -1,14 +1,4 @@
-import unittest
-import json
-# Assuming keyword_extractor and keyword_matcher are defined in a module named 'omr_checker'
-from keyword_extractor import keyword_extractor
-from file_match import keyword_matcher
-
-class TestKeywordExtractionAndMatching(unittest.TestCase):
-
-    def setUp(self):
-        # Sample input JSON for testing
-              self.input_json = {
+{
   "owner": "Udayraj123",
   "repo": "OMRChecker",
   "filteredFiles": [
@@ -118,33 +108,4 @@ class TestKeywordExtractionAndMatching(unittest.TestCase):
     "labels": ["enhancement"],
     "title": "[Feature] Support for providing custom field types/Q_TYPES in template.json"
   }
-
 }
-
-    def test_keyword_extractor(self):
-        # Extract keywords from the issue details
-        issue_details = self.input_json["issueDetails"]
-        text = f"{issue_details['title']} {issue_details['description']}"
-        extracted_keywords = keyword_extractor(text)
-
-        # Assert that extracted keywords are not empty
-        self.assertTrue(len(extracted_keywords) > 0, "No keywords extracted.")
-
-    def test_keyword_matcher(self):
-        # Extract keywords
-        issue_details = self.input_json["issueDetails"]
-        text = f"{issue_details['title']} {issue_details['description']}"
-        extracted_keywords = keyword_extractor(text)
-
-        # Test the keyword matcher function
-        match_result = keyword_matcher(self.input_json, extracted_keywords)
-
-        if isinstance(match_result,str):
-             match_result=json.loads(match_result)
-       
-        # Assert that the match result is as expected (modify based on expected output)
-        self.assertIsInstance(match_result, dict, "Expected match result to be a dictionary.")
-        # Add more assertions based on expected behavior of keyword_matcher
-        print(match_result)
-if __name__ == '__main__':
-    unittest.main()

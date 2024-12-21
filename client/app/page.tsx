@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, GitBranch, Zap, Code2 } from 'lucide-react';
+import {  GitBranch, Zap, Code2 } from 'lucide-react';
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);  // Initially set to false to prevent mismatch.
