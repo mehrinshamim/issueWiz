@@ -1,7 +1,8 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
-import { MessageSquare, GitBranch, Code2, Search, FileText, Workflow } from 'lucide-react';
+import { MessageSquare, GitBranch, Code2, Search, FileText, Workflow, Github } from 'lucide-react';
 import fetchDetails from '../utils/issuerep_det';
+import ReactMarkdown from 'react-markdown';
 
 interface ChatMessage {
   type: 'bot' | 'user';
@@ -22,6 +23,7 @@ const RepositoryAnalyzer = () => {
   const [fileContents, setFileContents] = useState<FileContent[]>([]);
   const [analysisContext, setAnalysisContext] = useState<any>(null);
 
+
   const fetchFileContent = async (owner: string, repo: string, path: string) => {
     const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`);
     const data = await response.json();
@@ -38,26 +40,27 @@ const RepositoryAnalyzer = () => {
     return category[Math.floor(Math.random() * category.length)];
   };
 
+
   const formatMessageContent = (content: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const parts = content.split(urlRegex);
-    
-    return parts.map((part, index) => {
-      if (part.match(urlRegex)) {
-        return (
-          <a
-            key={index}
-            href={part}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-cyan-400 hover:text-cyan-300 underline break-all"
-          >
-            {part}
-          </a>
-        );
-      }
-      return <span key={index}>{part}</span>;
-    });
+  
+    return (
+      <ReactMarkdown
+        components={{
+          a: ({ node, ...props }) => (
+            <a
+              {...props}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cyan-400 hover:text-cyan-300 underline break-all"
+            />
+          ),
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    );
   };
 
   const formatAnalysisContent = (analysis: any) => {
@@ -238,10 +241,29 @@ ${analysis.recommendations.additional_context}
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0B1A2E] via-[#12254A] to-[#0D1E3A] p-8">
+ return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0B1A2E] via-[#12254A] to-[#0D1E3A] p-8 relative overflow-hidden">
+      {/* Grid Pattern Background */}
+      <div className="absolute inset-0 pointer-events-none opacity-10">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#0B1A2E_1px,transparent_1px),linear-gradient(to_bottom,#0B1A2E_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+      </div>
+
+      {/* Decorative Icons */}
+      <div className="absolute top-20 right-20 opacity-20 max-md:hidden">
+        <GitBranch size={100} className="text-cyan-500" />
+      </div>
+      <div className="absolute bottom-20 left-20 opacity-20 max-md:hidden">
+        <Code2 size={100} className="text-cyan-500" />
+      </div>
+      <div className="absolute top-1/3 left-20 opacity-20 max-md:hidden">
+        <FileText size={80} className="text-cyan-500" />
+      </div>
+      <div className="absolute bottom-1/3 right-20 opacity-20 max-md:hidden">
+        <Workflow size={80} className="text-cyan-500" />
+      </div>
+
       {!showChatBot ? (
-        <div className="max-w-2xl mx-auto bg-[#162544]/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-cyan-500/20">
+        <div className="max-w-2xl mx-auto bg-[#162544]/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-cyan-500/20 relative z-10">
           <div className="text-center space-y-6 mb-8">
             <div className="flex items-center justify-center space-x-4">
               <Search className="text-cyan-400" size={40} />
@@ -253,28 +275,41 @@ ${analysis.recommendations.additional_context}
           </div>
 
           <div className="space-y-6">
-            <input
-              type="text"
-              value={repoUrl}
-              onChange={(e) => setRepoUrl(e.target.value)}
-              placeholder="https://github.com/owner/repo/issues/number"
-              className="w-full p-4 rounded-xl bg-[#1E2B43]/50 border border-cyan-500/20 text-white 
-                focus:ring-2 focus:ring-cyan-500/40 focus:border-transparent"
-            />
+            <div className="relative">
+              <Github className="absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-500/50" size={20} />
+              <input
+                type="text"
+                value={repoUrl}
+                onChange={(e) => setRepoUrl(e.target.value)}
+                placeholder="https://github.com/owner/repo/issues/number"
+                className="w-full pl-12 p-4 rounded-xl bg-[#1E2B43]/50 border border-cyan-500/20 text-white 
+                  focus:ring-2 focus:ring-cyan-500/40 focus:border-transparent"
+              />
+            </div>
             
             <button
               onClick={handleInitialAnalysis}
               disabled={loading}
               className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white py-4 rounded-xl
                 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-cyan-500/50
-                disabled:opacity-50 disabled:hover:scale-100"
+                disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center space-x-2"
             >
-              {loading ? 'Analyzing...' : 'Analyze Repository'}
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <span>Analyzing...</span>
+                </>
+              ) : (
+                <>
+                  <Search size={20} />
+                  <span>Analyze Repository</span>
+                </>
+              )}
             </button>
           </div>
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto bg-[#162544] rounded-lg shadow-xl min-h-[600px] flex flex-col border border-cyan-500/20">
+        <div className="max-w-4xl mx-auto bg-[#162544] rounded-lg shadow-xl min-h-[600px] flex flex-col border border-cyan-500/20 relative z-10">
           <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-6 rounded-t-lg border-b border-cyan-500/20">
             <div className="flex items-center space-x-4">
               <GitBranch className="text-cyan-400" size={32} />
@@ -308,15 +343,18 @@ ${analysis.recommendations.additional_context}
 
           <div className="p-6 border-t border-cyan-500/20 bg-[#1A1F35]">
             <div className="flex gap-4">
-              <input
-                type="text"
-                value={userMessage}
-                onChange={(e) => setUserMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleChatMessage()}
-                placeholder="Ask about code, workflow, or any questions..."
-                className="flex-1 p-4 text-lg rounded-full bg-[#1E2B43] border border-cyan-500/20 text-white 
-                  focus:ring-2 focus:ring-cyan-500/40 focus:border-transparent"
-              />
+              <div className="relative flex-1">
+                <MessageSquare className="absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-500/50" size={20} />
+                <input
+                  type="text"
+                  value={userMessage}
+                  onChange={(e) => setUserMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleChatMessage()}
+                  placeholder="Ask about code, workflow, or any questions..."
+                  className="w-full pl-12 p-4 text-lg rounded-full bg-[#1E2B43] border border-cyan-500/20 text-white 
+                    focus:ring-2 focus:ring-cyan-500/40 focus:border-transparent"
+                />
+              </div>
               <button
                 onClick={handleChatMessage}
                 className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white p-4 rounded-full 

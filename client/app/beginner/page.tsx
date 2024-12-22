@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import ChatBot from '../chatbot';
 import fetchDetails from '.././utils/user_det';
 import type { FetchedData } from '.././utils/user_det';
-import { GitBranch, Code2, Search, Github } from 'lucide-react';
+import { GitBranch, Code2, Search, Github, FileText, Workflow } from 'lucide-react';
 
 interface ChatMessage {
   type: 'bot' | 'user';
@@ -85,7 +85,7 @@ const Beginner = () => {
       type: 'user',
       content: userMessage,
     };
-
+    console.log(newUserMessage);
     setChatMessages(prev => [...prev, newUserMessage]);
     setUserMessage('');
 
@@ -112,6 +112,7 @@ const Beginner = () => {
       if (!aiResponse.ok) throw new Error('Failed to get AI response');
       
       const response = await aiResponse.json();
+      console.log(response);
       
       const newBotMessage: ChatMessage = {
         type: 'bot',
@@ -138,71 +139,63 @@ const Beginner = () => {
       <div className="absolute bottom-20 left-20 opacity-20 max-md:hidden">
         <Code2 size={100} className="text-cyan-500" />
       </div>
+      <div className="absolute top-1/3 left-20 opacity-20 max-md:hidden">
+        <FileText size={80} className="text-cyan-500" />
+      </div>
+      <div className="absolute bottom-1/3 right-20 opacity-20 max-md:hidden">
+        <Workflow size={80} className="text-cyan-500" />
+      </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
         {!showChatBot ? (
-          <div className="space-y-8">
-            <div className="text-center space-y-4">
+          <div className="max-w-2xl mx-auto bg-[#162544]/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-cyan-500/20">
+            <div className="text-center space-y-6 mb-8">
               <div className="flex items-center justify-center space-x-4">
-                <Search className="text-cyan-400 animate-pulse" size={24} />
-                <span className="text-xs uppercase tracking-wider text-cyan-300">
-                  Find Perfect Issues
-                </span>
+                <Search className="text-cyan-400" size={40} />
+                <h1 className="text-4xl font-bold text-white">Repository and Issue Matcher</h1>
               </div>
-              <h1 className="text-4xl font-bold text-white">REPOSITORY AND ISSUE MATCHER</h1>
-              <p className="text-lg text-white/70 max-w-2xl mx-auto">
+              <p className="text-xl text-white/70">
                 Enter your details below to discover tailored open-source issues that match your skills and interests.
               </p>
             </div>
 
-            <div className="bg-[#162544]/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-cyan-500/20">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-white/70 text-sm font-medium">GitHub Username</label>
-                  <div className="relative">
-                    <Github className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-500/50" size={20} />
-                    <input
-                      type="text"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      placeholder="Enter your GitHub username"
-                      className="w-full pl-10 p-3 rounded-xl bg-[#1E2B43]/50 border border-cyan-500/20 text-white 
-                        focus:ring-2 focus:ring-cyan-500/40 focus:border-transparent transition-all duration-300
-                        placeholder:text-white/30"
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-white/70 text-sm font-medium">Repository or Issue URL</label>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-white/70 text-sm font-medium">GitHub Username</label>
+                <div className="relative">
+                  <Github className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-500/50" size={20} />
                   <input
                     type="text"
-                    value={repoUrl}
-                    onChange={(e) => setRepoUrl(e.target.value)}
-                    placeholder="Enter the repository or issue link"
-                    className="w-full p-3 rounded-xl bg-[#1E2B43]/50 border border-cyan-500/20 text-white 
-                      focus:ring-2 focus:ring-cyan-500/40 focus:border-transparent transition-all duration-300
-                      placeholder:text-white/30"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your GitHub username"
+                    className="w-full pl-10 p-4 rounded-xl bg-[#1E2B43]/50 border border-cyan-500/20 text-white 
+                      focus:ring-2 focus:ring-cyan-500/40 focus:border-transparent"
                   />
                 </div>
-                
-                <button
-                  onClick={handleFetch}
-                  disabled={isLoading || !username || !repoUrl}
-                  className={`w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white py-4 px-6 rounded-xl
-                    flex items-center justify-center space-x-2
-                    hover:scale-105 transition-all duration-300 
-                    shadow-xl hover:shadow-cyan-500/50
-                    disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed
-                    ${isLoading ? 'animate-pulse' : ''}`}
-                >
-                  {isLoading ? (
-                    <span>Finding Issues...</span>
-                  ) : (
-                    <span>Find Recommended Issues</span>
-                  )}
-                </button>
               </div>
+              
+              <div className="space-y-2">
+                <label className="text-white/70 text-sm font-medium">Repository URL</label>
+                <input
+                  type="text"
+                  value={repoUrl}
+                  onChange={(e) => setRepoUrl(e.target.value)}
+                  placeholder="Enter the repository link"
+                  className="w-full p-4 rounded-xl bg-[#1E2B43]/50 border border-cyan-500/20 text-white 
+                    focus:ring-2 focus:ring-cyan-500/40 focus:border-transparent"
+                />
+              </div>
+              
+              <button
+                onClick={handleFetch}
+                disabled={isLoading || !username || !repoUrl}
+                className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white py-4 rounded-xl
+                  hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-cyan-500/50
+                  disabled:opacity-50 disabled:hover:scale-100"
+              >
+                {isLoading ? 'Finding Issues...' : 'Find Recommended Issues'}
+              </button>
             </div>
           </div>
         ) : (
