@@ -81,7 +81,7 @@ const fetchDetails = async (repoUrl: string) => {
     };
 
     try {
-      const postResponse = await fetch('https://2wf10g56-8000.inc1.devtunnels.ms/api/issues/match-keywords', {
+      const postResponse = await fetch('https://issuewiz.onrender.com/api/issues/match-keywords', {
         method: 'POST',
         mode: 'cors',
         headers: {
